@@ -9,6 +9,15 @@ public class typecasting {
         int character = ch;
         System.out.println(character);
 
+        float fcharacter = ch;
+        System.out.println(fcharacter);
+
+        double number = num;
+        System.out.println(number);
+
+        System.out.println((byte)num);
+
+        System.out.println((char)num);
 
     }
     
