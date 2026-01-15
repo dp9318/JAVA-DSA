@@ -1,5 +1,9 @@
 public class variables_in {
     public static void main(String[] args) {
+
+
+        // Below are different types of pre defined variables which we have in java 
+
         int integer=10;
         char character = 'A';
         String string = "Java is fun!";
