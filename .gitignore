@@ -3,7 +3,7 @@
 
 # --- VS Code ---
 .vscode/
-.Rough/
+Rough/
 # --- OS junk ---
 .DS_Store
 Thumbs.db

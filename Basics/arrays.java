@@ -1,9 +1,6 @@
 public class arrays {
     public static void main(String[] args) {
 
-        // Below is the classic example of integer array where we dont provide the size but just enter the values
-        int[] arr = {1,2,3,4,5};
-
         // we initialize or say predefined the size of array with the constructor
         int[] arr_num = new int[5]; 
         arr_num[0]=1;
