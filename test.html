@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Banking Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        nav {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        section {
+            padding: 20px;
+            margin: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .hidden {
+            display: none;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        form input, form button {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        form button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #218838;
+        }
+        #loanList {
+            list-style-type: none;
+            padding: 0;
+        }
+        #loanList li {
+            background-color: #e9ecef;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .hero {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: #2c3e50;
+            color: white;
+        }
+        .hero h1 {
+            font-size: 2.5em;
+        }
+        .hero p {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        .hero button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#account">Account Management</a></li>
+            <li><a href="#loan">Loan Application</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section id="home" class="hero">
+        <h1>Welcome to Our Bank</h1>
+        <p>Manage your account and apply for loans securely.</p>
+        <button onclick="showSection('account')">Get Started with Account Management</button>
+    </section>
+
+    <section id="account" class="hidden">
+        <h2>Account Management</h2>
+        <form id="accountForm">
+            <label>Name:</label>
+            <input type="text" id="name" value="John Doe"><br>
+            <label>Account Number:</label>
+            <input type="text" id="accountNumber" value="123456789"><br>
+            <label>Balance:</label>
+            <input type="number" id="balance" value="5000.00"><br>
+            <button type="submit">Update Account</button>
+        </form>
+        <div id="accountResult"></div>
+    </section>
+
+    <section id="loan" class="hidden">
+        <h2>Loan Application</h2>
+        <form id="loanForm">
+            <label>Loan Amount:</label>
+            <input type="number" id="loanAmount" required><br>
+            <label>Purpose:</label>
+            <input type="text" id="purpose" required><br>
+            <label>Loan Term (months):</label>
+            <input type="number" id="term" required><br>
+            <button type="submit">Apply for Loan</button>
+        </form>
+        <div id="loanResult"></div>
+        <ul id="loanList"></ul>
+    </section>
+
+    <section id="contact" class="hidden">
+        <h2>Contact Us</h2>
+        <p>For any inquiries, please contact us at contact@bank.com.</p>
+    </section>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        // Account Management
+        document.getElementById('accountForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let name = document.getElementById('name').value;
+            let accountNumber = document.getElementById('accountNumber').value;
+            let balance = parseFloat(document.getElementById('balance').value);
+
+            let userData = {
+                name: name,
+                accountNumber: accountNumber,
+                balance: balance
+            };
+
+            document.getElementById('accountResult').innerHTML = `
+                <h3>Account Updated</h3>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Account Number:</strong> ${accountNumber}</p>
+                <p><strong>Balance:</strong> $${balance.toFixed(2)}</p>
+            `;
+        });
+
+        // Loan Application
+        document.getElementById('loanForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let amount = parseFloat(document.getElementById('loanAmount').value);
+            let purpose = document.getElementById('purpose').value;
+            let term = parseInt(document.getElementById('term').value);
+
+            let loanApplications = [];
+            if (localStorage.getItem('loanApplications')) {
+                loanApplications = JSON.parse(localStorage.getItem('loanApplications'));
+            }
+
+            loanApplications.push({
+                amount: amount,
+                purpose: purpose,
+                term: term,
+                date: new Date().toLocaleDateString()
+            });
+
+            localStorage.setItem('loanApplications', JSON.stringify(loanApplications));
+
+            document.getElementById('loanResult').innerHTML = `
+                <h3>Loan Application Submitted</h3>
+                <p><strong>Amount:</strong> $${amount.toFixed(2)}</p>
+                <p><strong>Purpose:</strong> ${purpose}</p>
+                <p><strong>Term:</strong> ${term} months</p>
+                <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+            `;
+
+            let list = document.getElementById('loanList');
+            list.innerHTML = '';
+            loanApplications.forEach(loan => {
+                let li = document.createElement('li');
+                li.innerHTML = `
+                    <strong>Amount:</strong> $${loan.amount.toFixed(2)} |
+                    <strong>Purpose:</strong> ${loan.purpose} |
+                    <strong>Term:</strong> ${loan.term} months |
+                    <strong>Date:</strong> ${loan.date}
+                `;
+                list.appendChild(li);
+            });
+        });
+
+        // Initial load: Show home section
+        showSection('home');
+    </script>
+</body>
+</html>
